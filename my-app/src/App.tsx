@@ -1,21 +1,17 @@
-import { useState } from 'react'
-import { Stopwatch } from './components/Stopwatch'
 import './App.css'
+import { Hero } from './components/hero';
 
 const TITLE = 'Chronomètre';
 
 function App() {
-  const [isStopwatchPaused, setIsStopwatchPaused] = useState<boolean>(false);
-
-  const stopwatchStatus = isStopwatchPaused ? 'En pause' : 'En marche';
+  const handleProgressComplete = () => {
+    console.log('Progress completed!');
+  };
 
   return (
     <div className="app">
       <h1>{TITLE}</h1>
-      <Stopwatch onPauseChange={setIsStopwatchPaused} />
-      <p aria-live="polite">
-        État du chronomètre : {stopwatchStatus}
-      </p>
+      <Hero onProgressComplete={handleProgressComplete} />
     </div>
   );
 }
