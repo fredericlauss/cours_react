@@ -1,19 +1,14 @@
 import './App.css'
-import { Hero } from './components/hero';
-
-const TITLE = 'Chronomètre';
+import { Game } from './components/game';
 
 function App() {
-  const handleProgressComplete = () => {
-    console.log('Progress completed!');
-  };
 
   return (
     <div className="app">
-      <h1>{TITLE}</h1>
-      <Hero onProgressComplete={handleProgressComplete} />
+      <Game />
     </div>
   );
 }
+
 
 export default App;
