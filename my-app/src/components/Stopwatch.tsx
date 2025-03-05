@@ -1,47 +1,53 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
+
+const INTERVAL_DELAY = 1000;
+const INITIAL_TIME = 0;
 
 interface StopwatchProps {
-  onPauseChange: (isPaused: boolean) => void;
+  readonly onPauseChange: (isPaused: boolean) => void;
 }
 
 export function Stopwatch({ onPauseChange }: StopwatchProps) {
-  const [time, setTime] = useState(0);
+  const [elapsedSeconds, setElapsedSeconds] = useState(INITIAL_TIME);
   const [isPaused, setIsPaused] = useState(false);
 
+  const formattedTime = useFormattedTime(elapsedSeconds);
+
   useEffect(() => {
-    let intervalId: number;
+    if (isPaused) return;
 
-    if (!isPaused) {
-      intervalId = setInterval(() => {
-        setTime(prevTime => prevTime + 1);
-      }, 1000);
-    }
+    const intervalId = setInterval(() => {
+      setElapsedSeconds(prev => prev + 1);
+    }, INTERVAL_DELAY);
 
-    return () => {
-      clearInterval(intervalId);
-    };
+    return () => clearInterval(intervalId);
   }, [isPaused]);
 
-  const handlePauseClick = () => {
+  const handlePauseClick = useCallback(() => {
     setIsPaused(prevState => {
       const newPauseState = !prevState;
       onPauseChange(newPauseState);
       return newPauseState;
     });
-  };
-
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
+  }, [onPauseChange]);
 
   return (
     <div className="stopwatch">
-      <div className="time">{formatTime(time)}</div>
-      <button onClick={handlePauseClick}>
+      <div className="time">{formattedTime}</div>
+      <button 
+        onClick={handlePauseClick}
+        aria-label={isPaused ? 'Reprendre le chronomètre' : 'Mettre en pause le chronomètre'}
+      >
         {isPaused ? 'Reprendre' : 'Pause'}
       </button>
     </div>
   );
+}
+
+function useFormattedTime(seconds: number): string {
+  return useMemo(() => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  }, [seconds]);
 } 

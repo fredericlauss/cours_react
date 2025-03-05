@@ -2,18 +2,22 @@ import { useState } from 'react'
 import { Stopwatch } from './components/Stopwatch'
 import './App.css'
 
+const TITLE = 'Chronomètre';
+
 function App() {
-  const [isStopwatchPaused, setIsStopwatchPaused] = useState(false);
+  const [isStopwatchPaused, setIsStopwatchPaused] = useState<boolean>(false);
+
+  const stopwatchStatus = isStopwatchPaused ? 'En pause' : 'En marche';
 
   return (
-    <>
-      <h1>Chronomètre</h1>
+    <div className="app">
+      <h1>{TITLE}</h1>
       <Stopwatch onPauseChange={setIsStopwatchPaused} />
-      <p>
-        État du chronomètre : {isStopwatchPaused ? 'En pause' : 'En marche'}
+      <p aria-live="polite">
+        État du chronomètre : {stopwatchStatus}
       </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
