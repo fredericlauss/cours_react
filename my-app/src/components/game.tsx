@@ -39,20 +39,13 @@ export function Game() {
   const [nextId, setNextId] = useState(1);
   const [progress, setProgress] = useState(0);
 
-  // Production automatique
+  // Production automatique modifiée
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress(prev => {
         const newProgress = prev + 1;
         if (newProgress >= 10) {
-          // Quand la barre est pleine, on ajoute l'argent pour chaque unité
-          units.forEach(unit => {
-            // Trouver le type d'unité correspondant dans UNITS
-            const unitConfig = Object.values(UNITS).find(u => u.type === unit.type);
-            if (unitConfig) {
-              setMoney(prevMoney => prevMoney + unitConfig.productionAmount);
-            }
-          });
+          // On déplace la logique de production d'argent dans un autre useEffect
           return 0;
         }
         return newProgress;
@@ -60,13 +53,24 @@ export function Game() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [units]);
+  }, []); // On retire la dépendance à units
+
+  // Nouvel useEffect pour gérer la production d'argent
+  useEffect(() => {
+    if (progress === 0) {
+      units.forEach(unit => {
+        const unitConfig = Object.values(UNITS).find(u => u.type === unit.type);
+        if (unitConfig) {
+          setMoney(prevMoney => prevMoney + unitConfig.productionAmount);
+        }
+      });
+    }
+  }, [progress, units]);
 
   const handleProduction = () => {
     setProgress(prev => {
       const newProgress = prev + 1;
       if (newProgress >= 10) {
-        // Quand la barre est pleine, on ajoute l'argent pour chaque unité
         units.forEach(unit => {
           const unitConfig = Object.values(UNITS).find(u => u.type === unit.type);
           if (unitConfig) {
@@ -81,9 +85,11 @@ export function Game() {
 
   const handlePurchase = (unitType: keyof typeof UNITS) => {
     const unit = UNITS[unitType];
-    setMoney(prev => prev - unit.cost);
-    setUnits(prev => [...prev, { type: unit.type, id: nextId }]);
-    setNextId(prev => prev + 1);
+    if (money >= unit.cost) {
+      setMoney(prev => prev - unit.cost);
+      setUnits(prev => [...prev, { type: unit.type, id: nextId }]);
+      setNextId(prev => prev + 1);
+    }
   };
 
   return (
@@ -117,6 +123,7 @@ export function Game() {
           />
         </div>
       </div>
+
       <div className="units-container">
         {units.map(unit => (
           <Hero 

@@ -8,7 +8,7 @@ interface FactoryItem {
   interface FactoryProps {
     item: FactoryItem;
     money: number;
-    onPurchase: (cost: number) => void;
+    onPurchase: () => void;
   }
   
   export function Factory({ item, money, onPurchase }: FactoryProps) {
@@ -16,7 +16,7 @@ interface FactoryItem {
   
     const handlePurchase = () => {
       if (canBuy) {
-        onPurchase(item.cost);
+        onPurchase();
       }
     };
   
