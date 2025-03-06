@@ -11,17 +11,21 @@ interface GameState {
   money: number;
   units: Unit[];
   nextId: number;
+  speedMultiplier: 1 | 2 | 4;
   setMoney: (money: number) => void;
   addMoney: (amount: number) => void;
   removeMoney: (amount: number) => void;
   addUnit: (type: UnitConfig['type']) => void;
   updateUnitProgress: (id: number, progress: number) => void;
+  toggleSpeedMultiplier: () => void;
+  setSpeedMultiplier: (speed: 1 | 2 | 4) => void;
 }
 
 export const useStore = create<GameState>((set) => ({
   money: 0,
   units: [{ type: 'Hero', id: 0, progress: 0 }],
   nextId: 1,
+  speedMultiplier: 1,  // Valeur initiale
   
   setMoney: (money) => set({ money }),
   addMoney: (amount) => set((state) => ({ money: state.money + amount })),
@@ -38,5 +42,12 @@ export const useStore = create<GameState>((set) => ({
     units: state.units.map(unit => 
       unit.id === id ? { ...unit, progress } : unit
     )
+  })),
+  toggleSpeedMultiplier: () => set((state) => ({ 
+    speedMultiplier: state.speedMultiplier === 1 ? 2 : 
+                     state.speedMultiplier === 2 ? 4 : 1 
+  })),
+  setSpeedMultiplier: (speed) => set(() => ({ 
+    speedMultiplier: speed 
   }))
-})) 
+}))

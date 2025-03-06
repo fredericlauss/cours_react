@@ -8,9 +8,16 @@ import './Game.css';
 
 export function Game() {
   const { t } = useTranslation();
-  const { money, units, addMoney, removeMoney, addUnit } = useStore();
+  const { 
+    money, 
+    units, 
+    addMoney, 
+    removeMoney, 
+    addUnit, 
+    speedMultiplier,
+    setSpeedMultiplier 
+  } = useStore();
 
-  // Gestion globale de l'animation
   useEffect(() => {
     let lastTime = performance.now();
     let animationFrameId: number;
@@ -20,9 +27,9 @@ export function Game() {
       lastTime = currentTime;
 
       units.forEach(unit => {
-        const unitConfig = UNITS[unit.type.toUpperCase() as keyof typeof UNITS];
+        const unitConfig = UNITS[unit.type.toUpperCase()];
         if (unitConfig) {
-          const progressIncrement = (deltaTime / 1000) * unitConfig.productionRate;
+          const progressIncrement = (deltaTime / 1000) * unitConfig.productionRate * speedMultiplier;
           const newProgress = unit.progress + progressIncrement;
           
           if (newProgress >= 10) {
@@ -38,8 +45,13 @@ export function Game() {
     }
 
     animationFrameId = requestAnimationFrame(updateGame);
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [units, addMoney]);
+
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, [units, addMoney, speedMultiplier]);
 
   const handlePurchase = (unitType: keyof typeof UNITS) => {
     const unit = UNITS[unitType];
@@ -51,8 +63,30 @@ export function Game() {
 
   return (
     <div className="game">
-      <div className="money-display">
-        💰 {money} {t('money')}
+      <div className="controls">
+        <div className="money-display">
+          💰 {money} {t('money')}
+        </div>
+        <div className="speed-controls">
+          <button 
+            className={`speed-button speed-1 ${speedMultiplier === 1 ? 'active' : ''}`}
+            onClick={() => setSpeedMultiplier(1)}
+          >
+            ⏸ x1
+          </button>
+          <button 
+            className={`speed-button speed-2 ${speedMultiplier === 2 ? 'active' : ''}`}
+            onClick={() => setSpeedMultiplier(2)}
+          >
+            ⏩ x2
+          </button>
+          <button 
+            className={`speed-button speed-4 ${speedMultiplier === 4 ? 'active' : ''}`}
+            onClick={() => setSpeedMultiplier(4)}
+          >
+            🏃 x4
+          </button>
+        </div>
       </div>
       
       <div className="factories">
