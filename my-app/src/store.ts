@@ -13,6 +13,7 @@ interface GameState {
   units: Unit[];
   nextId: number;
   speedMultiplier: 1 | 2 | 4;
+  showCGU: boolean;
   setMoney: (money: number) => void;
   addMoney: (amount: number) => void;
   removeMoney: (amount: number) => void;
@@ -21,6 +22,7 @@ interface GameState {
   toggleSpeedMultiplier: () => void;
   setSpeedMultiplier: (speed: 1 | 2 | 4) => void;
   resetGame: () => void;
+  setShowCGU: (show: boolean) => void;
 }
 
 export const useStore = create<GameState>()(
@@ -30,6 +32,7 @@ export const useStore = create<GameState>()(
       units: [{ type: 'Hero', id: 0, progress: 0 }],
       nextId: 1,
       speedMultiplier: 1,  // Valeur initiale
+      showCGU: false,  // Valeur initiale
       
       setMoney: (money) => set({ money }),
       addMoney: (amount) => set((state) => ({ money: state.money + amount })),
@@ -52,11 +55,13 @@ export const useStore = create<GameState>()(
                          state.speedMultiplier === 2 ? 4 : 1 
       })),
       setSpeedMultiplier: (speed) => set({ speedMultiplier: speed }),
+      setShowCGU: (show) => set({ showCGU: show }),
       resetGame: () => set({
         money: 0,
         units: [{ type: 'Hero', id: 0, progress: 0 }],
         nextId: 1,
-        speedMultiplier: 1
+        speedMultiplier: 1,
+        showCGU: false
       })
     }),
     {

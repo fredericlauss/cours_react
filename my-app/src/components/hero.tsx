@@ -28,11 +28,12 @@ export function Hero({ type, progress, id }: HeroProps) {
   };
 
   return (
-    <div className="hero">
+    <div className="hero" data-testid="hero-unit">
       <div className="unit-type">{t(`units.${type}`)}</div>
       <button 
         className="production-button"
         onClick={handleClick}
+        data-testid="hero-button"
       >
         {t('produce')}
       </button>

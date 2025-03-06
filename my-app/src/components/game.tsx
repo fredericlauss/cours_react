@@ -16,7 +16,9 @@ export function Game() {
     addUnit, 
     speedMultiplier,
     setSpeedMultiplier,
-    resetGame
+    resetGame,
+    showCGU,
+    setShowCGU
   } = useStore();
 
   useEffect(() => {
@@ -65,7 +67,7 @@ export function Game() {
   return (
     <div className="game">
       <div className="controls">
-        <div className="money-display">
+        <div className="money-display" data-testid="money-display">
           💰 {money} {t('money')}
         </div>
         <div className="speed-controls">
@@ -100,12 +102,26 @@ export function Game() {
         </div>
       </div>
       
+      <button 
+        data-testid="cgu-button"
+        onClick={() => setShowCGU(true)}
+      >
+        {t('cgu.button')}
+      </button>
+
+      {showCGU && (
+        <div data-testid="cgu-content">
+          {/* Contenu des CGU */}
+        </div>
+      )}
+      
       <div className="factories">
         {Object.entries(UNITS).map(([key, unit]) => (
           <Factory 
             key={key}
             item={unit}
             onPurchase={() => handlePurchase(key as keyof typeof UNITS)}
+            data-testid={`buy-${key.toLowerCase()}-button`}
           />
         ))}
       </div>
@@ -117,6 +133,7 @@ export function Game() {
             id={unit.id}
             type={unit.type}
             progress={unit.progress}
+            data-testid="hero-unit"
           />
         ))}
       </div>
