@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Factory } from './factory';
 import { Hero } from './hero';
 import './Game.css';
@@ -37,46 +37,12 @@ export function Game() {
     { type: 'Hero', id: 0 }
   ]);
   const [nextId, setNextId] = useState(1);
-  const [progress, setProgress] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress(prev => {
-        const newProgress = prev + 1;
-        if (newProgress >= 10) {
-          return 0;
-        }
-        return newProgress;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []); 
-  useEffect(() => {
-    if (progress === 0) {
-      units.forEach(unit => {
-        const unitConfig = Object.values(UNITS).find(u => u.type === unit.type);
-        if (unitConfig) {
-          setMoney(prevMoney => prevMoney + unitConfig.productionAmount);
-        }
-      });
+  const handleProduction = (unitType: string) => {
+    const unitConfig = Object.values(UNITS).find(u => u.type === unitType);
+    if (unitConfig) {
+      setMoney(prevMoney => prevMoney + unitConfig.productionAmount);
     }
-  }, [progress, units]);
-
-  const handleProduction = () => {
-    setProgress(prev => {
-      const newProgress = prev + 1;
-      if (newProgress >= 10) {
-        units.forEach(unit => {
-          const unitConfig = Object.values(UNITS).find(u => u.type === unit.type);
-          if (unitConfig) {
-            setMoney(prevMoney => prevMoney + unitConfig.productionAmount);
-          }
-        });
-        return 0;
-      }
-      return newProgress;
-    });
   };
 
   const handlePurchase = (unitType: keyof typeof UNITS) => {
@@ -105,26 +71,12 @@ export function Game() {
         ))}
       </div>
 
-      <div className="production-section">
-        <button 
-          className="production-button"
-          onClick={handleProduction}
-        >
-          Produire
-        </button>
-        <div className="progress-bar">
-          <div 
-            className="progress-fill" 
-            style={{ width: `${(progress / 10) * 100}%` }}
-          />
-        </div>
-      </div>
-
       <div className="units-container">
         {units.map(unit => (
           <Hero 
             key={unit.id}
             type={unit.type}
+            onProduction={() => handleProduction(unit.type)}
           />
         ))}
       </div>
