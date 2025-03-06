@@ -40,3 +40,23 @@
 .read-the-docs {
   color: #888;
 }
+
+.language-switcher {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.language-switcher button {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+}
+
+.language-switcher button:hover {
+  background: #f0f0f0;
+}

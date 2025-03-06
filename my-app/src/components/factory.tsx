@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 interface FactoryItem {
     type: string;
     cost: number;
@@ -12,6 +14,7 @@ interface FactoryItem {
   }
   
   export function Factory({ item, money, onPurchase }: FactoryProps) {
+    const { t } = useTranslation();
     const canBuy = money >= item.cost;
   
     const handlePurchase = () => {
@@ -26,7 +29,7 @@ interface FactoryItem {
         onClick={handlePurchase}
         disabled={!canBuy}
       >
-        Acheter {item.type} ({item.cost} pièces)
+        {t('buy')} {t(`units.${item.type}`)} ({item.cost} {t('money')})
       </button>
     );
   }

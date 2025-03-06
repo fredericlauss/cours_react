@@ -1,0 +1,15 @@
+{
+  "money": "pièces",
+  "produce": "Produire",
+  "buy": "Acheter",
+  "units": {
+    "Hero": "Héros",
+    "Knight": "Chevalier",
+    "Barrack": "Caserne",
+    "Castle": "Château"
+  },
+  "nav": {
+    "home": "Accueil",
+    "terms": "CGU"
+  }
+} 

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Factory } from './factory';
 import { Hero } from './hero';
 import './Game.css';
+import { useTranslation } from 'react-i18next';
 
 // Définition des types d'unités disponibles
 const UNITS = {
@@ -32,6 +33,7 @@ const UNITS = {
 };
 
 export function Game() {
+  const { t } = useTranslation();
   const [money, setMoney] = useState(0);
   const [units, setUnits] = useState<Array<{ type: string; id: number }>>([
     { type: 'Hero', id: 0 }
@@ -57,7 +59,7 @@ export function Game() {
   return (
     <div className="game">
       <div className="money-display">
-        💰 {money} pièces
+        💰 {money} {t('money')}
       </div>
       
       <div className="factories">

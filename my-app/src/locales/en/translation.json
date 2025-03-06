@@ -1,0 +1,15 @@
+{
+    "money": "coins",
+    "produce": "Produce",
+    "buy": "Buy",
+    "units": {
+      "Hero": "Hero",
+      "Knight": "Knight",
+      "Barrack": "Barrack",
+      "Castle": "Castle"
+    },
+    "nav": {
+      "home": "Home",
+      "terms": "Terms"
+    }
+  }

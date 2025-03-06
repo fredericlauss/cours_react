@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import './Hero.css';
 
 interface HeroProps {
@@ -7,6 +8,7 @@ interface HeroProps {
 }
 
 export function Hero({ type, onProduction }: HeroProps) {
+  const { t } = useTranslation();
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -37,12 +39,12 @@ export function Hero({ type, onProduction }: HeroProps) {
 
   return (
     <div className="hero">
-      <div className="unit-type">{type}</div>
+      <div className="unit-type">{t(`units.${type}`)}</div>
       <button 
         className="production-button"
         onClick={handleClick}
       >
-        Produire
+        {t('produce')}
       </button>
       <div className="progress-bar">
         <div 
