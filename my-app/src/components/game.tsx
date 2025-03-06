@@ -15,7 +15,8 @@ export function Game() {
     removeMoney, 
     addUnit, 
     speedMultiplier,
-    setSpeedMultiplier 
+    setSpeedMultiplier,
+    resetGame
   } = useStore();
 
   useEffect(() => {
@@ -85,6 +86,16 @@ export function Game() {
             onClick={() => setSpeedMultiplier(4)}
           >
             🏃 x4
+          </button>
+          <button 
+            className="reset-button"
+            onClick={() => {
+              if (window.confirm(t('confirmReset'))) {
+                resetGame();
+              }
+            }}
+          >
+            🔄 {t('reset')}
           </button>
         </div>
       </div>

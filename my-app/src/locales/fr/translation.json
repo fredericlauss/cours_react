@@ -11,5 +11,7 @@
   "nav": {
     "home": "Accueil",
     "terms": "CGU"
-  }
+  },
+  "confirmReset": "Voulez-vous vraiment réinitialiser le jeu ?",
+  "reset": "Réinitialiser"
 } 

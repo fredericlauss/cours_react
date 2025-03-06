@@ -11,5 +11,7 @@
     "nav": {
       "home": "Home",
       "terms": "Terms"
-    }
+    },
+    "confirmReset": "Are you sure you want to reset the game?",
+    "reset": "Reset"
   }
