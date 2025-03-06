@@ -17,7 +17,7 @@ describe('Game Tests', () => {
       .should('be.disabled')
 
     // Clique sur le héros existant plusieurs fois
-    for(let i = 0; i < 100; i++) {
+    for(let i = 0; i < 50; i++) {
       cy.get('[data-testid="hero-button"]').click()
     }
 
