@@ -1,40 +1,30 @@
-import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useStore } from '../store';
+import { UNITS } from '../config/units';
 import './Hero.css';
 
 interface HeroProps {
   type: string;
-  onProduction: () => void;
+  progress: number;
+  id: number;
 }
 
-export function Hero({ type, onProduction }: HeroProps) {
+export function Hero({ type, progress, id }: HeroProps) {
   const { t } = useTranslation();
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress(prev => {
-        const newProgress = prev + 1;
-        if (newProgress >= 10) {
-          onProduction();
-          return 0;
-        }
-        return newProgress;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [onProduction]);
+  const updateUnitProgress = useStore(state => state.updateUnitProgress);
+  const addMoney = useStore(state => state.addMoney);
 
   const handleClick = () => {
-    setProgress(prev => {
-      const newProgress = prev + 1;
-      if (newProgress >= 10) {
-        onProduction();
-        return 0;
+    const newProgress = progress + 1;
+    if (newProgress >= 10) {
+      const unitConfig = Object.values(UNITS).find(u => u.type === type);
+      if (unitConfig) {
+        addMoney(unitConfig.productionAmount);
+        updateUnitProgress(id, 0);
       }
-      return newProgress;
-    });
+    } else {
+      updateUnitProgress(id, newProgress);
+    }
   };
 
   return (

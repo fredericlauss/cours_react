@@ -2,46 +2,44 @@ import { useTranslation } from 'react-i18next';
 import { Factory } from './factory';
 import { Hero } from './hero';
 import { useStore } from '../store';
+import { UNITS } from '../config/units';
+import { useEffect } from 'react';
 import './Game.css';
-
-// Définition des types d'unités disponibles
-const UNITS = {
-  HERO: {
-    type: 'Hero',
-    cost: 5,
-    productionRate: 1,
-    productionAmount: 1
-  },
-  KNIGHT: {
-    type: 'Knight',
-    cost: 15,
-    productionRate: 0.8,
-    productionAmount: 2
-  },
-  BARRACK: {
-    type: 'Barrack',
-    cost: 50,
-    productionRate: 0.5,
-    productionAmount: 5
-  },
-  CASTLE: {
-    type: 'Castle',
-    cost: 200,
-    productionRate: 0.3,
-    productionAmount: 20
-  }
-};
 
 export function Game() {
   const { t } = useTranslation();
   const { money, units, addMoney, removeMoney, addUnit } = useStore();
 
-  const handleProduction = (unitType: string) => {
-    const unitConfig = Object.values(UNITS).find(u => u.type === unitType);
-    if (unitConfig) {
-      addMoney(unitConfig.productionAmount);
+  // Gestion globale de l'animation
+  useEffect(() => {
+    let lastTime = performance.now();
+    let animationFrameId: number;
+
+    function updateGame(currentTime: number) {
+      const deltaTime = currentTime - lastTime;
+      lastTime = currentTime;
+
+      units.forEach(unit => {
+        const unitConfig = UNITS[unit.type.toUpperCase() as keyof typeof UNITS];
+        if (unitConfig) {
+          const progressIncrement = (deltaTime / 1000) * unitConfig.productionRate;
+          const newProgress = unit.progress + progressIncrement;
+          
+          if (newProgress >= 10) {
+            addMoney(unitConfig.productionAmount);
+            useStore.getState().updateUnitProgress(unit.id, 0);
+          } else {
+            useStore.getState().updateUnitProgress(unit.id, newProgress);
+          }
+        }
+      });
+
+      animationFrameId = requestAnimationFrame(updateGame);
     }
-  };
+
+    animationFrameId = requestAnimationFrame(updateGame);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [units, addMoney]);
 
   const handlePurchase = (unitType: keyof typeof UNITS) => {
     const unit = UNITS[unitType];
@@ -71,8 +69,9 @@ export function Game() {
         {units.map(unit => (
           <Hero 
             key={unit.id}
+            id={unit.id}
             type={unit.type}
-            onProduction={() => handleProduction(unit.type)}
+            progress={unit.progress}
           />
         ))}
       </div>
