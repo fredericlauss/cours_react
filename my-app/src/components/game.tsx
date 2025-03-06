@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Factory } from './factory';
 import { Hero } from './hero';
+import { useStore } from '../store';
 import './Game.css';
-import { useTranslation } from 'react-i18next';
 
 // Définition des types d'unités disponibles
 const UNITS = {
@@ -34,25 +34,20 @@ const UNITS = {
 
 export function Game() {
   const { t } = useTranslation();
-  const [money, setMoney] = useState(0);
-  const [units, setUnits] = useState<Array<{ type: string; id: number }>>([
-    { type: 'Hero', id: 0 }
-  ]);
-  const [nextId, setNextId] = useState(1);
+  const { money, units, addMoney, removeMoney, addUnit } = useStore();
 
   const handleProduction = (unitType: string) => {
     const unitConfig = Object.values(UNITS).find(u => u.type === unitType);
     if (unitConfig) {
-      setMoney(prevMoney => prevMoney + unitConfig.productionAmount);
+      addMoney(unitConfig.productionAmount);
     }
   };
 
   const handlePurchase = (unitType: keyof typeof UNITS) => {
     const unit = UNITS[unitType];
     if (money >= unit.cost) {
-      setMoney(prev => prev - unit.cost);
-      setUnits(prev => [...prev, { type: unit.type, id: nextId }]);
-      setNextId(prev => prev + 1);
+      removeMoney(unit.cost);
+      addUnit(unit.type);
     }
   };
 
@@ -67,7 +62,6 @@ export function Game() {
           <Factory 
             key={key}
             item={unit}
-            money={money}
             onPurchase={() => handlePurchase(key as keyof typeof UNITS)}
           />
         ))}

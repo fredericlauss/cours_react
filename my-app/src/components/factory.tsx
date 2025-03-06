@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useStore } from '../store';
 
 interface FactoryItem {
     type: string;
@@ -9,24 +10,18 @@ interface FactoryItem {
   
   interface FactoryProps {
     item: FactoryItem;
-    money: number;
     onPurchase: () => void;
   }
   
-  export function Factory({ item, money, onPurchase }: FactoryProps) {
+  export function Factory({ item, onPurchase }: FactoryProps) {
     const { t } = useTranslation();
+    const money = useStore(state => state.money);
     const canBuy = money >= item.cost;
-  
-    const handlePurchase = () => {
-      if (canBuy) {
-        onPurchase();
-      }
-    };
   
     return (
       <button 
         className={`factory-button ${!canBuy ? 'disabled' : ''}`}
-        onClick={handlePurchase}
+        onClick={onPurchase}
         disabled={!canBuy}
       >
         {t('buy')} {t(`units.${item.type}`)} ({item.cost} {t('money')})
