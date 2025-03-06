@@ -1,8 +1,8 @@
 interface FactoryItem {
     type: string;
     cost: number;
-    productionRate: number;  // Vitesse de production en secondes
-    productionAmount: number;  // Montant produit à chaque cycle
+    productionRate: number; 
+    productionAmount: number; 
   }
   
   interface FactoryProps {

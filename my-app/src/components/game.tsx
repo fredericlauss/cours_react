@@ -39,13 +39,11 @@ export function Game() {
   const [nextId, setNextId] = useState(1);
   const [progress, setProgress] = useState(0);
 
-  // Production automatique modifiée
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress(prev => {
         const newProgress = prev + 1;
         if (newProgress >= 10) {
-          // On déplace la logique de production d'argent dans un autre useEffect
           return 0;
         }
         return newProgress;
@@ -53,9 +51,7 @@ export function Game() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []); // On retire la dépendance à units
-
-  // Nouvel useEffect pour gérer la production d'argent
+  }, []); 
   useEffect(() => {
     if (progress === 0) {
       units.forEach(unit => {
