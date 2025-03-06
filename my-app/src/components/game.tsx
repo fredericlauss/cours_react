@@ -16,9 +16,7 @@ export function Game() {
     addUnit, 
     speedMultiplier,
     setSpeedMultiplier,
-    resetGame,
-    showCGU,
-    setShowCGU
+    resetGame
   } = useStore();
 
   useEffect(() => {
@@ -101,19 +99,6 @@ export function Game() {
           </button>
         </div>
       </div>
-      
-      <button 
-        data-testid="cgu-button"
-        onClick={() => setShowCGU(true)}
-      >
-        {t('cgu.button')}
-      </button>
-
-      {showCGU && (
-        <div data-testid="cgu-content">
-          {/* Contenu des CGU */}
-        </div>
-      )}
       
       <div className="factories">
         {Object.entries(UNITS).map(([key, unit]) => (
