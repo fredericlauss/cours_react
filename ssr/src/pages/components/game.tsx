@@ -18,10 +18,10 @@ export function Game() {
   } = useStore();
 
   useEffect(() => {
-    let lastTime = performance.now();
-    let animationFrameId: number;
-
-    function updateGame(currentTime: number) {
+    let lastTime = Date.now();
+    
+    const intervalId = setInterval(() => {
+      const currentTime = Date.now();
       const deltaTime = currentTime - lastTime;
       lastTime = currentTime;
 
@@ -32,23 +32,20 @@ export function Game() {
           const newProgress = unit.progress + progressIncrement;
           
           if (newProgress >= 10) {
-            addMoney(unitConfig.productionAmount);
-            useStore.getState().updateUnitProgress(unit.id, 0);
+            const completedCycles = Math.floor(newProgress / 10);
+            const remainingProgress = newProgress % 10;
+            
+            addMoney(unitConfig.productionAmount * completedCycles);
+            useStore.getState().updateUnitProgress(unit.id, remainingProgress);
           } else {
             useStore.getState().updateUnitProgress(unit.id, newProgress);
           }
         }
       });
-
-      animationFrameId = requestAnimationFrame(updateGame);
-    }
-
-    animationFrameId = requestAnimationFrame(updateGame);
+    }, 100);
 
     return () => {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
+      clearInterval(intervalId);
     };
   }, [units, addMoney, speedMultiplier]);
 
