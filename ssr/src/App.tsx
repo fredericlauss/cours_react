@@ -1,15 +1,25 @@
 import { Link, Route, Routes } from 'react-router-dom';
+import { Game } from './pages/components/game';
+import { CGU } from './pages/components/CGU';
 
-const PagePathsWithComponents = import.meta.glob('./pages/*.tsx', { eager: true });
-
-const routes = Object.keys(PagePathsWithComponents).map((path: string) => {
-  const name = path.match(/\.\/pages\/(.*)\.tsx$/)![1];
-  return {
-    name,
-    path: name === 'Home' ? '/' : `/${name.toLowerCase()}`,
-    component: PagePathsWithComponents[path].default,
-  };
-});
+const routes = [
+  {
+    name: 'Home',
+    path: '/',
+    component: () => {
+      return (
+        <div className="app">
+          <Game />
+        </div>
+      );
+    }
+  },
+  {
+    name: 'CGU',
+    path: '/cgu',
+    component: CGU
+  }
+];
 
 export function App() {
   return (
